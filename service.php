@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/_includes/bootstrap.php';
+require_once __DIR__ . '/_includes/mercado-pago.php';
 
 $categorySlug = strtolower((string) ($_GET['category'] ?? ''));
 $serviceSlug = strtolower((string) ($_GET['service'] ?? ''));
@@ -59,6 +59,14 @@ page_head($title, $description, service_schema($product));
         </div>
         <div class="button-row">
             <a class="button primary" href="<?= whatsapp_link($message) ?>" target="_blank" rel="noopener">Pedir pelo WhatsApp</a>
+            <?php if (mp_checkout_available($product)): ?>
+            <form class="inline-form" action="/checkout/create.php" method="post">
+                <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                <input type="hidden" name="category" value="<?= e($categorySlug) ?>">
+                <input type="hidden" name="service" value="<?= e($serviceSlug) ?>">
+                <button class="button payment" type="submit">Comprar com Mercado Pago</button>
+            </form>
+            <?php endif; ?>
             <a class="button secondary" href="<?= e($category['rota']) ?>">Outros serviços</a>
         </div>
         <?php if (!empty($product['observacao_preco'])): ?><p class="fine-print"><?= e($product['observacao_preco']) ?></p><?php endif; ?>

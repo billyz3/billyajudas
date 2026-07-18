@@ -160,6 +160,12 @@
 }
 
 .error-page { min-height: 60vh; }
+.inline-form { margin: 0; }
+.button.payment { border: 0; background: #009ee3; color: #fff; cursor: pointer; font: inherit; }
+.button.payment:hover,.button.payment:focus-visible { background: #008ed0; outline: 2px solid #8dd9ff; outline-offset: 2px; }
+.payment-return { min-height: 62vh; }
+.payment-summary { display: grid; grid-template-columns: auto minmax(0,1fr); gap: .55rem 1rem; max-width: 620px; margin: 1.5rem 0; padding: 1.1rem; border: 1px solid var(--line); border-radius: 16px; background: #10172b; color: var(--muted); }
+.payment-summary strong { color: var(--ink); }
 .tema-coral.service-icon { background: linear-gradient(135deg, #fb7185, #f97316); }
 .tema-blue.service-icon { background: linear-gradient(135deg, #38bdf8, #2563eb); }
 .tema-green.service-icon { background: linear-gradient(135deg, #4ade80, #059669); }

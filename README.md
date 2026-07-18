@@ -12,6 +12,10 @@ O contrato técnico e os critérios de conclusão estão em `PROJECT_ARCHITECTUR
 4. O e-mail público ainda está pendente.
 5. Copie `config.local.php.example` para `config.local.php` somente se precisar sobrescrever esses valores.
 
+## Pagamento
+
+O Checkout Pro está preparado apenas para serviços com preço fixo. Sem configuração privada válida, o botão de compra não aparece e o WhatsApp continua como canal principal. Consulte `MERCADO_PAGO_INTEGRATION.md`; nunca coloque Access Token, Client Secret ou Webhook Secret no repositório.
+
 ## Editar categorias
 
 Edite storage/data/categories.json. Cada item possui nome, slug, rota, descrição, preço inicial, ícone e tema visual. Mantenha os slugs e as rotas sincronizados com suas pastas para evitar links quebrados.

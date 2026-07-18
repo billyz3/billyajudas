@@ -106,7 +106,7 @@
     "entregas": ["5 artes personalizadas", "Formato PNG", "Link editável do Canva", "Aplicação da logo, cores e textos enviados"],
     "opcoes": ["Instagram", "Loja", "Produto", "Serviço"],
     "whatsapp_message": "Olá! Quero contratar as 5 artes personalizadas no Canva. Já tenho logo, cores e textos: ",
-    "checkout_enabled": false,
+    "checkout_enabled": true,
     "status": "publicado"
   },
   {
@@ -260,7 +260,7 @@
     "entregas": ["Currículo organizado em uma página", "Melhoria de título", "Melhoria de resumo", "Revisão das experiências", "Entrega do currículo em PDF", "Orientação para atualizar o LinkedIn"],
     "opcoes": [],
     "whatsapp_message": "Olá! Quero contratar Currículo + LinkedIn Express. Já tenho um currículo atual: ",
-    "checkout_enabled": false,
+    "checkout_enabled": true,
     "status": "publicado"
   },
   {

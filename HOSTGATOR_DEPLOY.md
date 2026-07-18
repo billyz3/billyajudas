@@ -27,6 +27,16 @@ O campo técnico **Subdomínio** criado automaticamente pelo cPanel pode aparece
 `billyajudas.is-local.org.gl-acessorios.com`. Não altere esse campo: ele é apenas o
 alias interno exigido pelo cPanel e não muda o endereço público `billyajudas.is-local.org`.
 
+## Configuração privada e escrita
+
+1. Copie `config.local.php.example` para `config.local.php` dentro do Document Root.
+2. Preencha as credenciais novas diretamente no arquivo privado da hospedagem; não faça commit desse arquivo.
+3. Garanta que o PHP consiga criar e escrever em `storage/orders/` e `storage/logs/`.
+4. Confirme que o navegador recebe acesso negado ao abrir `/storage/`, `/_includes/` e `/tools/`.
+5. Mantenha `MP_CHECKOUT_ENABLED` como `false` durante a instalação.
+6. Não use `MP_ENVIRONMENT: production` antes de validar o fluxo de teste e o Webhook.
+7. Só depois dos testes, altere `MP_CHECKOUT_ENABLED` para `true`.
+
 ## SSL
 
 Mantenha o proxy Cloudflare desligado durante o primeiro apontamento. Depois que o DNS resolver para `69.6.213.72`, abra **SSL/TLS Status** no cPanel e execute o AutoSSL para o novo domínio.

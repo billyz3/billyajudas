@@ -1,7 +1,9 @@
 config.local.php
+storage/orders/*.json
+storage/orders/*.tmp
+storage/logs/*.log
 *.zip
 *.bak
 error_log
 .DS_Store
 Thumbs.db
-

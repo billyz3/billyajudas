@@ -108,6 +108,25 @@ def main() -> int:
     if contains_key(categories, "sku") or contains_key(products, "sku"):
         errors.append("campo proibido sku detectado no catalogo")
 
+    checkout_products = [product for product in products if product.get("checkout_enabled")]
+    if len(checkout_products) != 2:
+        errors.append(f"quantidade inesperada de servicos elegiveis ao checkout: {len(checkout_products)}")
+    required_checkout_files = (
+        "_includes/mercado-pago.php",
+        "checkout/create.php",
+        "api/mercado-pago/webhook.php",
+        "_includes/payment-return.php",
+        "pagamento/sucesso/index.php",
+        "pagamento/pendente/index.php",
+        "pagamento/falha/index.php",
+    )
+    for relative in required_checkout_files:
+        if not (ROOT / relative).is_file():
+            errors.append(f"arquivo do checkout ausente: {relative}")
+    gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    if "config.local.php" not in gitignore:
+        errors.append("config.local.php nao esta protegido pelo .gitignore")
+
     tree = ET.parse(ROOT / "sitemap.xml")
     namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     sitemap_urls = [node.text or "" for node in tree.findall("sm:url/sm:loc", namespace)]
