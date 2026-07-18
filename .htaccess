@@ -5,6 +5,7 @@ ErrorDocument 404 /404.php
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule ^(?:_includes|storage|tools)(?:/|$) - [F,L,NC]
+  RewriteRule ^visual/arte-para-instagram/?$ /canva-social/cinco-artes-canva-personalizadas/ [R=301,L,NE]
   RewriteRule ^(visual|canva-social|lojas-online|sites|automacoes|carreira|suporte-digital)/([a-z0-9-]+)/?$ service.php?category=$1&service=$2 [L,QSA,NC]
 </IfModule>
 
