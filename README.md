@@ -2,6 +2,8 @@
 
 Site-base oficial versionado em `billyz3/billyajudas`, preparado para hospedagem PHP na HostGator.
 
+O contrato técnico e os critérios de conclusão estão em `PROJECT_ARCHITECTURE.md`. O plano seguro do Checkout Pro está em `MERCADO_PAGO_INTEGRATION.md`.
+
 ## Configuração necessária
 
 1. A marca oficial definida é `Billy Ajudas`.
@@ -28,4 +30,4 @@ O card do catálogo está em storage/data/products.json. O conteúdo e os exempl
 
 ## HostGator
 
-Consulte `HOSTGATOR_DEPLOY.md` antes de publicar. O endereço IP compartilhado confirmado é `69.6.213.72`; o Document Root do novo domínio ainda precisa ser informado pelo cPanel.
+Consulte `HOSTGATOR_DEPLOY.md` antes de publicar. O endereço IP compartilhado confirmado é `69.6.213.72`; o Document Root confirmado é `/home2/hg96b387/billyajudas.is-local.org`.
