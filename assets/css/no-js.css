@@ -1,0 +1,13 @@
+html:not(.js) .carousel-track {
+  grid-auto-flow: initial;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  overflow: visible;
+  scroll-snap-type: none;
+}
+html:not(.js) .carousel-controls { display: none; }
+@media (max-width: 900px) {
+  html:not(.js) .carousel-track { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  html:not(.js) .carousel-track { grid-template-columns: 1fr; }
+}

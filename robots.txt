@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://billyajudas.is-local.org/sitemap.xml

@@ -1,0 +1,59 @@
+<?php
+declare(strict_types=1);
+
+if (is_file(__DIR__ . '/../config.local.php')) require_once __DIR__ . '/../config.local.php';
+
+if (!defined('SITE_NAME')) define('SITE_NAME', 'Billy Ajudas');
+if (!defined('SITE_URL')) define('SITE_URL', 'https://billyajudas.is-local.org');
+if (!defined('PUBLIC_EMAIL')) define('PUBLIC_EMAIL', '');
+if (!defined('WHATSAPP_NUMBER')) define('WHATSAPP_NUMBER', '5511932184146');
+
+function data_file(string $name): array {
+    $file = __DIR__ . '/../storage/data/' . $name . '.json';
+    $content = is_file($file) ? file_get_contents($file) : false;
+    $data = $content ? json_decode($content, true) : [];
+    return is_array($data) ? $data : [];
+}
+
+function e(string $value): string { return htmlspecialchars($value, ENT_QUOTES, 'UTF-8'); }
+
+function categories(): array { return data_file('categories'); }
+
+function category_by_slug(string $slug): ?array {
+    foreach (categories() as $category) if (($category['slug'] ?? '') === $slug) return $category;
+    return null;
+}
+
+function page_head(string $title, string $description): void { ?>
+<!doctype html><html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title><?= e($title) ?></title><meta name="description" content="<?= e($description) ?>">
+<link rel="canonical" href="<?= e(current_url()) ?>">
+<meta property="og:type" content="website"><meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="<?= e(SITE_NAME) ?>"><meta property="og:title" content="<?= e($title) ?>">
+<meta property="og:description" content="<?= e($description) ?>"><meta property="og:url" content="<?= e(current_url()) ?>">
+<meta name="theme-color" content="#0b1020"><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/css/no-js.css">
+<script type="application/ld+json"><?= json_encode(['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => SITE_NAME, 'url' => site_url()], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
+</head><body>
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+<header class="site-header"><a class="brand" href="/">Billy<span>Ajudas</span></a>
+<button class="menu-toggle" aria-expanded="false" aria-controls="main-menu">Menu</button>
+<nav id="main-menu" aria-label="Principal"><a href="/#servicos">Serviços</a><a href="/categorias/">Categorias</a><a href="/assinatura/">Assinatura</a><a href="/#como-funciona">Como funciona</a><a class="nav-whatsapp" href="<?= whatsapp_link('Olá! Quero conhecer os serviços.') ?>" target="_blank" rel="noopener">WhatsApp</a></nav></header>
+<?php }
+function page_footer(): void { ?>
+<footer class="site-footer"><a class="brand" href="/">Billy<span>Ajudas</span></a><p>Serviços digitais feitos sob medida para pequenos negócios e pessoas.</p><a href="/categorias/">Categorias</a> · <a href="/assinatura/">Planos mensais</a></footer><script src="/assets/js/site.js" defer></script></body></html>
+<?php }
+function site_url(): string {
+    $configured = rtrim((string) SITE_URL, '/');
+    if ($configured !== '') return $configured . '/';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    return 'https://' . preg_replace('/[^a-zA-Z0-9.\-:]/', '', $host) . '/';
+}
+function current_url(): string {
+    $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+    return rtrim(site_url(), '/') . '/' . ltrim($path, '/');
+}
+function whatsapp_link(string $text): string {
+    $number = defined('WHATSAPP_NUMBER') ? preg_replace('/\D/', '', WHATSAPP_NUMBER) : '';
+    return $number ? 'https://wa.me/' . $number . '?text=' . rawurlencode($text) : 'https://wa.me/?text=' . rawurlencode($text);
+}

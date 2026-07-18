@@ -1,0 +1,14 @@
+[
+  {
+    "nome":"Serviços por assinatura para pequenos negócios",
+    "slug":"servicos-por-assinatura",
+    "categoria":"Assinatura",
+    "categoria_slug":"assinatura",
+    "rota":"/assinatura/",
+    "descricao":"Planos mensais personalizados para manter presença digital, artes, site e automações em dia.",
+    "preco":"Sob consulta",
+    "modelo":"assinatura",
+    "whatsapp_enabled":true,
+    "status":"publicado"
+  }
+]

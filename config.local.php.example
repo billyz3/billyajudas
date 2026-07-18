@@ -1,0 +1,7 @@
+<?php
+// Copie este arquivo como config.local.php apenas se precisar sobrescrever
+// os dados públicos padrão definidos no site.
+define('SITE_NAME', 'Billy Ajudas');
+define('SITE_URL', 'https://billyajudas.is-local.org');
+define('PUBLIC_EMAIL', ''); // Preencher quando o e-mail profissional estiver pronto.
+define('WHATSAPP_NUMBER', '5511932184146');
