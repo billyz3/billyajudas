@@ -7,6 +7,7 @@ conta_cpanel: "hg96b387"
 home: "/home2/hg96b387"
 ip_compartilhado: "69.6.213.72"
 dominio_planejado: "billyajudas.is-local.org"
+document_root: "/home2/hg96b387/billyajudas.is-local.org"
 registro_dns:
   tipo: "A"
   valor: "69.6.213.72"
@@ -19,8 +20,12 @@ registro_dns:
 1. Solicite `billyajudas.is-local.org` com o registro A acima.
 2. No cPanel, abra **Domínios** e adicione `billyajudas.is-local.org`.
 3. Desmarque **Share document root** para não sobrescrever outro site.
-4. Anote o Document Root criado pelo cPanel.
-5. Envie o conteúdo deste repositório para esse Document Root.
+4. Confirme o Document Root: `/home2/hg96b387/billyajudas.is-local.org`.
+5. Envie o conteúdo deste repositório diretamente para esse Document Root.
+
+O campo técnico **Subdomínio** criado automaticamente pelo cPanel pode aparecer como
+`billyajudas.is-local.org.gl-acessorios.com`. Não altere esse campo: ele é apenas o
+alias interno exigido pelo cPanel e não muda o endereço público `billyajudas.is-local.org`.
 
 ## SSL
 
@@ -46,4 +51,3 @@ Não force redirecionamento HTTPS antes de o certificado do novo domínio estar 
 ```
 
 Os endereços `/_includes/` e `/storage/` devem responder com acesso negado.
-
