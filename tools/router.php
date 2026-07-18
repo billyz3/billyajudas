@@ -28,6 +28,11 @@ if ($path === '/') {
     return true;
 }
 
+if (preg_match('#^/visual/arte-para-instagram/?$#i', $path)) {
+    header('Location: /canva-social/cinco-artes-canva-personalizadas/', true, 301);
+    return true;
+}
+
 if (preg_match('#^/(visual|canva-social|lojas-online|sites|automacoes|carreira|suporte-digital)/([a-z0-9-]+)/?$#', $path, $matches)) {
     $_GET['category'] = $matches[1];
     $_GET['service'] = $matches[2];

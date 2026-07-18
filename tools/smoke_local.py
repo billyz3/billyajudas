@@ -56,6 +56,10 @@ def main() -> int:
     if status != 200 or "Comprar com Mercado Pago" in text:
         errors.append("checkout apareceu sem credencial privada configurada")
 
+    status, _, text = request("/visual/arte-para-instagram/")
+    if status != 200 or "5 Artes Personalizadas no Canva" not in text:
+        errors.append("alias /visual/arte-para-instagram/ não chegou ao serviço esperado")
+
     for protected in ("/_includes/bootstrap.php", "/storage/data/products.json", "/tools/validate_site.py", "/config.local.php.example"):
         status, _, _ = request(protected)
         if status != 403:
