@@ -15,6 +15,21 @@ registro_dns:
   cloudflare_proxy_inicial: false
 ```
 
+## Estado confirmado em 2026-07-18
+
+```yaml
+dominio_no_cpanel: true
+document_root: "/home2/hg96b387/billyajudas.is-local.org"
+arquivos_publicados: true
+vhost_com_host_header: "HTTP 200"
+arquivos_privados: "HTTP 403"
+dns_publico: "registro A ainda ausente"
+ssl: "aguardando DNS"
+```
+
+O servidor já entrega o Billy Ajudas quando recebe o `Host` correto. Enquanto o DNS A
+estiver ausente, o endereço público não resolve e o AutoSSL não consegue concluir.
+
 ## Antes do upload
 
 1. Solicite `billyajudas.is-local.org` com o registro A acima.
@@ -66,6 +81,12 @@ Depois do deploy e do SSL, valide:
 
 ```bash
 python3 /home2/hg96b387/billyajudas-repo/tools/smoke_production.py https://billyajudas.is-local.org
+```
+
+Para verificar separadamente DNS, vhost e SSL, execute:
+
+```bash
+python3 /home2/hg96b387/billyajudas-repo/tools/check_publication.py
 ```
 
 ## Teste mínimo

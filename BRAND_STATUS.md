@@ -7,7 +7,11 @@ marca:
 
 dominio:
   endereco: "https://billyajudas.is-local.org"
-  status: "sem registro A público em 2026-07-18; aguardando aprovação/apontamento"
+  status: "criado no cPanel; registro A público ainda ausente em 2026-07-18"
+  document_root: "/home2/hg96b387/billyajudas.is-local.org"
+  vhost_http_direto: "HTTP 200 confirmado no IP 69.6.213.72 com Host correto"
+  dns_a: "pendente no provedor is-local.org"
+  ssl: "pendente; executar AutoSSL depois que o DNS resolver"
 
 contato:
   whatsapp: "+55 11 93218-4146"
