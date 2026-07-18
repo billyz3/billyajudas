@@ -19,12 +19,37 @@ function e(string $value): string { return htmlspecialchars($value, ENT_QUOTES, 
 
 function categories(): array { return data_file('categories'); }
 
+function products(): array { return data_file('products'); }
+
+function published_products(): array {
+    return array_values(array_filter(products(), static fn(array $product): bool => ($product['status'] ?? '') === 'publicado'));
+}
+
+function products_by_category(string $categorySlug): array {
+    return array_values(array_filter(
+        published_products(),
+        static fn(array $product): bool => ($product['categoria_slug'] ?? '') === $categorySlug
+    ));
+}
+
+function product_by_slugs(string $categorySlug, string $productSlug): ?array {
+    foreach (published_products() as $product) {
+        if (($product['categoria_slug'] ?? '') === $categorySlug && ($product['slug'] ?? '') === $productSlug) return $product;
+    }
+    return null;
+}
+
+function featured_products(int $limit = 6): array {
+    $featured = array_values(array_filter(published_products(), static fn(array $product): bool => !empty($product['featured'])));
+    return array_slice($featured, 0, max(0, $limit));
+}
+
 function category_by_slug(string $slug): ?array {
     foreach (categories() as $category) if (($category['slug'] ?? '') === $slug) return $category;
     return null;
 }
 
-function page_head(string $title, string $description): void { ?>
+function page_head(string $title, string $description, array $schema = []): void { ?>
 <!doctype html><html lang="pt-BR"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= e($title) ?></title><meta name="description" content="<?= e($description) ?>">
@@ -32,8 +57,10 @@ function page_head(string $title, string $description): void { ?>
 <meta property="og:type" content="website"><meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="<?= e(SITE_NAME) ?>"><meta property="og:title" content="<?= e($title) ?>">
 <meta property="og:description" content="<?= e($description) ?>"><meta property="og:url" content="<?= e(current_url()) ?>">
-<meta name="theme-color" content="#0b1020"><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/css/no-js.css">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="<?= e($title) ?>"><meta name="twitter:description" content="<?= e($description) ?>">
+<meta name="theme-color" content="#0b1020"><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/css/services.css"><noscript><link rel="stylesheet" href="/assets/css/no-js.css"></noscript>
 <script type="application/ld+json"><?= json_encode(['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => SITE_NAME, 'url' => site_url()], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
+<?php if ($schema): ?><script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script><?php endif; ?>
 </head><body>
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 <header class="site-header"><a class="brand" href="/">Billy<span>Ajudas</span></a>
@@ -56,4 +83,28 @@ function current_url(): string {
 function whatsapp_link(string $text): string {
     $number = defined('WHATSAPP_NUMBER') ? preg_replace('/\D/', '', WHATSAPP_NUMBER) : '';
     return $number ? 'https://wa.me/' . $number . '?text=' . rawurlencode($text) : 'https://wa.me/?text=' . rawurlencode($text);
+}
+
+function service_schema(array $product): array {
+    $offers = [];
+    if (($product['preco_tipo'] ?? '') === 'fixo' && isset($product['preco_valor']) && is_numeric($product['preco_valor'])) {
+        $offers = [
+            '@type' => 'Offer',
+            'priceCurrency' => 'BRL',
+            'price' => number_format((float) $product['preco_valor'], 2, '.', ''),
+            'url' => rtrim(site_url(), '/') . ($product['rota'] ?? '/'),
+            'availability' => 'https://schema.org/InStock',
+        ];
+    }
+    $schema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Service',
+        'name' => (string) ($product['nome'] ?? ''),
+        'description' => (string) ($product['descricao'] ?? ''),
+        'provider' => ['@type' => 'Organization', 'name' => SITE_NAME, 'url' => site_url()],
+        'url' => rtrim(site_url(), '/') . ($product['rota'] ?? '/'),
+        'areaServed' => 'BR',
+    ];
+    if ($offers) $schema['offers'] = $offers;
+    return $schema;
 }
