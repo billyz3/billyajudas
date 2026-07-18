@@ -43,6 +43,31 @@ Mantenha o proxy Cloudflare desligado durante o primeiro apontamento. Depois que
 
 Não force redirecionamento HTTPS antes de o certificado do novo domínio estar válido.
 
+## Deploy pelo Terminal do cPanel
+
+Depois de aprovar e mesclar a Pull Request no `main`, execute:
+
+```bash
+cd /home2/hg96b387
+curl -fsSLo deploy-billy-ajudas.sh https://raw.githubusercontent.com/billyz3/billyajudas/main/tools/deploy_hostgator.sh
+bash deploy-billy-ajudas.sh
+```
+
+O script usa o repositório público por HTTPS, valida o projeto e sincroniza o conteúdo para
+`/home2/hg96b387/billyajudas.is-local.org`. Ele preserva deliberadamente:
+
+```text
+config.local.php
+storage/orders/
+storage/logs/
+```
+
+Depois do deploy e do SSL, valide:
+
+```bash
+python3 /home2/hg96b387/billyajudas-repo/tools/smoke_production.py https://billyajudas.is-local.org
+```
+
 ## Teste mínimo
 
 ```text

@@ -49,18 +49,36 @@ function category_by_slug(string $slug): ?array {
     return null;
 }
 
-function page_head(string $title, string $description, array $schema = []): void { ?>
+function csp_nonce(): string {
+    static $nonce = null;
+    if ($nonce === null) $nonce = base64_encode(random_bytes(18));
+    return $nonce;
+}
+
+function send_public_security_headers(): void {
+    if (headers_sent()) return;
+    $nonce = csp_nonce();
+    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-{$nonce}'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'");
+    header('Cross-Origin-Opener-Policy: same-origin');
+    header('Cross-Origin-Resource-Policy: same-site');
+}
+
+function page_head(string $title, string $description, array $schema = []): void {
+send_public_security_headers();
+$nonce = csp_nonce();
+?>
 <!doctype html><html lang="pt-BR"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= e($title) ?></title><meta name="description" content="<?= e($description) ?>">
+<?php if (http_response_code() >= 400): ?><meta name="robots" content="noindex,follow"><?php endif; ?>
 <link rel="canonical" href="<?= e(current_url()) ?>">
 <meta property="og:type" content="website"><meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="<?= e(SITE_NAME) ?>"><meta property="og:title" content="<?= e($title) ?>">
 <meta property="og:description" content="<?= e($description) ?>"><meta property="og:url" content="<?= e(current_url()) ?>">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="<?= e($title) ?>"><meta name="twitter:description" content="<?= e($description) ?>">
-<meta name="theme-color" content="#0b1020"><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/css/services.css"><link rel="stylesheet" href="/assets/css/institutional.css"><noscript><link rel="stylesheet" href="/assets/css/no-js.css"></noscript>
-<script type="application/ld+json"><?= json_encode(['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => SITE_NAME, 'url' => site_url()], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
-<?php if ($schema): ?><script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script><?php endif; ?>
+<meta name="theme-color" content="#0b1020"><link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/css/services.css"><link rel="stylesheet" href="/assets/css/institutional.css"><noscript><link rel="stylesheet" href="/assets/css/no-js.css"></noscript>
+<script nonce="<?= e($nonce) ?>" type="application/ld+json"><?= json_encode(['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => SITE_NAME, 'url' => site_url()], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
+<?php if ($schema): ?><script nonce="<?= e($nonce) ?>" type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script><?php endif; ?>
 </head><body>
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 <header class="site-header"><a class="brand" href="/">Billy<span>Ajudas</span></a>

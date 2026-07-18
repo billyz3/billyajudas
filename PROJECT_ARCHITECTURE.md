@@ -20,6 +20,8 @@ direcao_visual: "pendente"
 sku: "proibido"
 conversao_principal: "WhatsApp"
 checkout: "Mercado Pago Checkout Pro — fundação implementada, ativação pendente"
+paginas_institucionais: "implementadas"
+qa_automatico: "GitHub Actions + validação local + smoke de produção"
 document_root: "/home2/hg96b387/billyajudas.is-local.org"
 ```
 
@@ -44,7 +46,7 @@ document_root: "/home2/hg96b387/billyajudas.is-local.org"
 
 O Checkout Pro usa criação de preferências no backend. Preço, título e referência vêm do catálogo do servidor. Access Token, Client Secret e Webhook Secret ficam somente em configuração privada. A aprovação depende de Webhook assinado e consulta posterior à API; parâmetros de retorno no navegador não aprovam pedido.
 
-A fundação técnica está presente para os dois serviços de preço fixo. O botão só aparece quando um Access Token válido for configurado no servidor. Produção permanece bloqueada até rotação das credenciais privadas, SSL, Webhook Secret e testes completos.
+A fundação técnica está presente para os dois serviços de preço fixo. O botão só aparece quando a chave geral estiver ativa e um Access Token válido for configurado no servidor. Produção permanece bloqueada até rotação das credenciais privadas, SSL, Webhook Secret e testes completos.
 
 As credenciais privadas compartilhadas durante o desenvolvimento devem ser regeneradas antes da produção.
 

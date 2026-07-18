@@ -4,5 +4,7 @@ Disallow: /service.php
 Disallow: /_includes/
 Disallow: /storage/
 Disallow: /api/
+Disallow: /checkout/
+Disallow: /pagamento/
 
 Sitemap: https://billyajudas.is-local.org/sitemap.xml

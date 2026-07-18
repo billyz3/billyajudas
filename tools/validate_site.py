@@ -130,6 +130,9 @@ def main() -> int:
     for relative in required_checkout_files:
         if not (ROOT / relative).is_file():
             errors.append(f"arquivo do checkout ausente: {relative}")
+    for relative in ("assets/img/favicon.svg", ".github/workflows/quality.yml", "tools/smoke_production.py"):
+        if not (ROOT / relative).is_file():
+            errors.append(f"arquivo operacional ausente: {relative}")
     gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
     if "config.local.php" not in gitignore:
         errors.append("config.local.php nao esta protegido pelo .gitignore")

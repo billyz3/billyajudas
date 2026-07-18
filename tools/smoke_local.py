@@ -48,6 +48,9 @@ def main() -> int:
             errors.append(f"{route}: erro PHP visível")
         if route.startswith("/pagamento/") and "noindex, nofollow" not in headers.get("X-Robots-Tag", ""):
             errors.append(f"{route}: X-Robots-Tag ausente")
+        if route.endswith(".php") is False and route.endswith((".txt", ".xml")) is False:
+            if "default-src 'self'" not in headers.get("Content-Security-Policy", ""):
+                errors.append(f"{route}: Content-Security-Policy ausente")
 
     status, _, text = request("/canva-social/cinco-artes-canva-personalizadas/")
     if status != 200 or "Comprar com Mercado Pago" in text:
@@ -72,9 +75,11 @@ def main() -> int:
     if status != 401:
         errors.append(f"webhook sem segredo: esperado 401, recebido {status}")
 
-    status, _, _ = request("/rota-que-nao-existe/")
+    status, _, not_found_text = request("/rota-que-nao-existe/")
     if status != 404:
         errors.append(f"404 amigável: esperado 404, recebido {status}")
+    if 'name="robots" content="noindex,follow"' not in not_found_text:
+        errors.append("404 amigável: meta noindex ausente")
 
     if errors:
         print("SMOKE FALHOU")
