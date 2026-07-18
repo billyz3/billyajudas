@@ -19,11 +19,12 @@ O Checkout Pro está preparado apenas para serviços com preço fixo. Sem config
 ## Qualidade e publicação
 
 - `python tools/validate_site.py`: valida catálogo, sitemap, arquivos e ausência de segredos.
+- `php tools/test_mercado_pago.php`: valida elegibilidade, CSRF, referências, persistência, estados e assinatura do Webhook sem chamar a API externa.
 - `python tools/smoke_local.py http://127.0.0.1:8765`: testa as rotas com o servidor local.
 - `python tools/smoke_production.py https://billyajudas.is-local.org`: audita a publicação sem escrever dados.
 - `tools/deploy_hostgator.sh`: atualiza a cópia Git e sincroniza a produção preservando configuração, pedidos e logs.
 
-O GitHub Actions repete lint PHP, validação do catálogo e smoke HTTP em pushes e pull requests.
+O GitHub Actions repete lint PHP, validação do catálogo, testes unitários do Mercado Pago e smoke HTTP em pushes e pull requests.
 
 ## Editar categorias
 

@@ -20,6 +20,8 @@ jobs:
         run: find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
       - name: Catalog and security validation
         run: python3 tools/validate_site.py
+      - name: Mercado Pago unit tests
+        run: php tools/test_mercado_pago.php
       - name: Local HTTP smoke test
         run: |
           php -S 127.0.0.1:8765 -t . tools/router.php > /tmp/billyajudas-php.log 2>&1 &

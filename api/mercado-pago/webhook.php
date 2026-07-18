@@ -69,9 +69,8 @@ if (!$amountMatches || !$currencyMatches || !$collectorMatches || !$modeMatches)
 }
 
 $newStatus = mp_normalize_status((string) ($payment['status'] ?? 'pending'));
-$statusRank = ['created' => 0, 'pending' => 10, 'rejected' => 20, 'cancelled' => 20, 'approved' => 30, 'refunded' => 40, 'charged_back' => 50];
 $currentStatus = (string) ($order['status'] ?? 'created');
-if (($statusRank[$newStatus] ?? 10) >= ($statusRank[$currentStatus] ?? 0)) $order['status'] = $newStatus;
+if (mp_should_advance_status($currentStatus, $newStatus)) $order['status'] = $newStatus;
 $order['payment_id'] = $dataId;
 $order['payment_status_detail'] = (string) ($payment['status_detail'] ?? '');
 $order['payment_method'] = (string) ($payment['payment_method_id'] ?? '');
