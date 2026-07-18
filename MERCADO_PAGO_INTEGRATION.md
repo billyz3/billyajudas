@@ -2,16 +2,35 @@
 
 Esta documentação registra a arquitetura sem armazenar credenciais reais.
 
+## Estado atual
+
+```yaml
+preferencia_backend: "implementada"
+preco_controlado_pelo_servidor: true
+csrf_e_limite_de_tentativas: true
+retornos_success_pending_failure: "implementados"
+webhook_hmac: "implementado"
+consulta_payment_api: "implementada"
+armazenamento_local_idempotente: "implementado"
+credenciais_no_repositorio: false
+ativacao_em_producao: "bloqueada até rotação, SSL, segredo do Webhook e testes"
+```
+
 ## Configuração privada esperada
 
 Adicionar somente no `config.local.php` da hospedagem, nunca no GitHub:
 
 ```php
+define('MP_CHECKOUT_ENABLED', false);
 define('MP_ENVIRONMENT', 'test');
 define('MP_PUBLIC_KEY', '');
 define('MP_ACCESS_TOKEN', '');
 define('MP_WEBHOOK_SECRET', '');
 ```
+
+Mantenha `MP_CHECKOUT_ENABLED` como `false` durante a instalação. Troque para
+`true` somente depois de validar o Webhook, as URLs de retorno e uma compra com
+usuários de teste. Essa constante funciona como desligamento geral do checkout.
 
 `MP_CLIENT_SECRET` não é necessário no fluxo básico do Checkout Pro e não deve ser exposto.
 
@@ -34,7 +53,7 @@ define('MP_WEBHOOK_SECRET', '');
 - catálogo com serviços de preço fixo identificados;
 - Webhook Secret gerado no painel;
 - credenciais de teste novas e armazenadas fora do Git;
-- endpoints e armazenamento de pedidos implementados;
+- confirmar permissão de escrita em `storage/orders/` e `storage/logs/` na HostGator;
 - testes de preferência, retornos, assinatura, retries e idempotência;
 - credenciais de produção novas;
 - primeiro pagamento produtivo e medição oficial de qualidade.

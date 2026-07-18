@@ -7,7 +7,7 @@ marca:
 
 dominio:
   endereco: "https://billyajudas.is-local.org"
-  status: "aguardando aprovação e apontamento DNS"
+  status: "sem registro A público em 2026-07-18; aguardando aprovação/apontamento"
 
 contato:
   whatsapp: "+55 11 93218-4146"

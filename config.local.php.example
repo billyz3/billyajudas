@@ -5,3 +5,11 @@ define('SITE_NAME', 'Billy Ajudas');
 define('SITE_URL', 'https://billyajudas.is-local.org');
 define('PUBLIC_EMAIL', ''); // Preencher quando o e-mail profissional estiver pronto.
 define('WHATSAPP_NUMBER', '5511932184146');
+
+// Mercado Pago Checkout Pro. Use apenas no config.local.php privado da hospedagem.
+define('MP_CHECKOUT_ENABLED', false); // Ative somente depois dos testes e do Webhook.
+define('MP_ENVIRONMENT', 'test'); // test | production
+define('MP_PUBLIC_KEY', ''); // Opcional no fluxo atual por redirecionamento.
+define('MP_ACCESS_TOKEN', ''); // Privado. Nunca envie ao GitHub.
+define('MP_WEBHOOK_SECRET', ''); // Privado. Gerado em Webhooks no painel.
+define('MP_COLLECTOR_ID', ''); // Opcional: ID numérico da conta vendedora para validação extra.

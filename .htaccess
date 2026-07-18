@@ -1,12 +1,14 @@
-Options -Indexes
+Options -Indexes -MultiViews
 DirectoryIndex index.php
+ErrorDocument 404 /404.php
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteRule ^(?:_includes|storage)(?:/|$) - [F,L,NC]
+  RewriteRule ^(?:_includes|storage|tools)(?:/|$) - [F,L,NC]
+  RewriteRule ^(visual|canva-social|lojas-online|sites|automacoes|carreira|suporte-digital)/([a-z0-9-]+)/?$ service.php?category=$1&service=$2 [L,QSA,NC]
 </IfModule>
 
-<FilesMatch "^(?:config\.local\.php(?:\.example)?|\.gitignore|BRAND_STATUS\.md|HOSTGATOR_DEPLOY\.md|README\.md)$">
+<FilesMatch "^(?:config\.local\.php(?:\.example)?|\.gitignore|BRAND_STATUS\.md|HOSTGATOR_DEPLOY\.md|MERCADO_PAGO_INTEGRATION\.md|PROJECT_ARCHITECTURE\.md|README\.md|composer\.(?:json|lock))$">
   Require all denied
 </FilesMatch>
 
@@ -16,4 +18,3 @@ DirectoryIndex index.php
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 </IfModule>
-

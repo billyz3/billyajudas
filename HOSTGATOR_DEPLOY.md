@@ -27,11 +27,46 @@ O campo técnico **Subdomínio** criado automaticamente pelo cPanel pode aparece
 `billyajudas.is-local.org.gl-acessorios.com`. Não altere esse campo: ele é apenas o
 alias interno exigido pelo cPanel e não muda o endereço público `billyajudas.is-local.org`.
 
+## Configuração privada e escrita
+
+1. Copie `config.local.php.example` para `config.local.php` dentro do Document Root.
+2. Preencha as credenciais novas diretamente no arquivo privado da hospedagem; não faça commit desse arquivo.
+3. Garanta que o PHP consiga criar e escrever em `storage/orders/` e `storage/logs/`.
+4. Confirme que o navegador recebe acesso negado ao abrir `/storage/`, `/_includes/` e `/tools/`.
+5. Mantenha `MP_CHECKOUT_ENABLED` como `false` durante a instalação.
+6. Não use `MP_ENVIRONMENT: production` antes de validar o fluxo de teste e o Webhook.
+7. Só depois dos testes, altere `MP_CHECKOUT_ENABLED` para `true`.
+
 ## SSL
 
 Mantenha o proxy Cloudflare desligado durante o primeiro apontamento. Depois que o DNS resolver para `69.6.213.72`, abra **SSL/TLS Status** no cPanel e execute o AutoSSL para o novo domínio.
 
 Não force redirecionamento HTTPS antes de o certificado do novo domínio estar válido.
+
+## Deploy pelo Terminal do cPanel
+
+Depois de aprovar e mesclar a Pull Request no `main`, execute:
+
+```bash
+cd /home2/hg96b387
+curl -fsSLo deploy-billy-ajudas.sh https://raw.githubusercontent.com/billyz3/billyajudas/main/tools/deploy_hostgator.sh
+bash deploy-billy-ajudas.sh
+```
+
+O script usa o repositório público por HTTPS, valida o projeto e sincroniza o conteúdo para
+`/home2/hg96b387/billyajudas.is-local.org`. Ele preserva deliberadamente:
+
+```text
+config.local.php
+storage/orders/
+storage/logs/
+```
+
+Depois do deploy e do SSL, valide:
+
+```bash
+python3 /home2/hg96b387/billyajudas-repo/tools/smoke_production.py https://billyajudas.is-local.org
+```
 
 ## Teste mínimo
 
