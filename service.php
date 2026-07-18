@@ -113,6 +113,7 @@ page_head($title, $description, service_schema($product));
         <details><summary>O valor mostrado é final?</summary><p><?= e($product['observacao_preco'] ?? 'O valor é confirmado antes do início, conforme o escopo escolhido.') ?></p></details>
         <details><summary>Como recebo o serviço?</summary><p>O formato de entrega depende do serviço e será registrado na proposta enviada pelo WhatsApp.</p></details>
         <details><summary>Posso pedir algo personalizado?</summary><p>Sim. Explique sua necessidade para avaliarmos se cabe neste serviço ou em um pacote sob medida.</p></details>
+        <p class="fine-print">Ao contratar, você concorda com os <a href="/termos-de-servico/">Termos de serviço</a> e com a <a href="/cancelamento-e-reembolso/">política de cancelamento e reembolso</a>.</p>
     </section>
 
     <?php if ($related): ?>

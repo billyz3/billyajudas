@@ -27,7 +27,11 @@ def main() -> int:
     errors: list[str] = []
     categories = json.loads((ROOT / "storage/data/categories.json").read_text(encoding="utf-8"))
     products = json.loads((ROOT / "storage/data/products.json").read_text(encoding="utf-8"))
-    routes = ["/", "/categorias/", "/assinatura/", "/robots.txt", "/sitemap.xml"]
+    routes = [
+        "/", "/categorias/", "/assinatura/", "/como-funciona/", "/contato/",
+        "/privacidade/", "/termos-de-servico/", "/cancelamento-e-reembolso/",
+        "/robots.txt", "/sitemap.xml",
+    ]
     routes += [item["rota"] for item in categories]
     routes += [item["rota"] for item in products if item["rota"] != "/assinatura/"]
     routes += ["/pagamento/sucesso/", "/pagamento/pendente/", "/pagamento/falha/"]

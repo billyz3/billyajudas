@@ -12,6 +12,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOMAIN = "https://billyajudas.is-local.org"
+INSTITUTIONAL_ROUTES = {
+    "/como-funciona/",
+    "/contato/",
+    "/privacidade/",
+    "/termos-de-servico/",
+    "/cancelamento-e-reembolso/",
+}
 CATEGORY_FIELDS = {"nome", "slug", "rota", "descricao", "preco_inicial", "icone", "tema"}
 PRODUCT_FIELDS = {
     "nome",
@@ -132,7 +139,7 @@ def main() -> int:
     sitemap_urls = [node.text or "" for node in tree.findall("sm:url/sm:loc", namespace)]
     if len(sitemap_urls) != len(set(sitemap_urls)):
         errors.append("sitemap contém URLs duplicadas")
-    expected_routes = {"/", "/categorias/", "/assinatura/"} | category_routes | product_routes
+    expected_routes = {"/", "/categorias/", "/assinatura/"} | INSTITUTIONAL_ROUTES | category_routes | product_routes
     expected_urls = {DOMAIN + route for route in expected_routes}
     missing_urls = sorted(expected_urls - set(sitemap_urls))
     extra_urls = sorted(set(sitemap_urls) - expected_urls)
@@ -140,6 +147,9 @@ def main() -> int:
         errors.append(f"sitemap sem URLs: {missing_urls}")
     if extra_urls:
         errors.append(f"sitemap com URLs inesperadas: {extra_urls}")
+    for route in INSTITUTIONAL_ROUTES:
+        if not (ROOT / route.strip("/") / "index.php").is_file():
+            errors.append(f"pagina institucional ausente: {route}")
 
     public_extensions = {".php", ".js", ".css", ".json", ".xml", ".txt", ".htaccess"}
     forbidden_terms = ("mercadofreedom", "gl acessórios", "gl acessorios", "hotmart")

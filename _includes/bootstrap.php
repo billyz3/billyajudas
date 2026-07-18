@@ -58,17 +58,17 @@ function page_head(string $title, string $description, array $schema = []): void
 <meta property="og:site_name" content="<?= e(SITE_NAME) ?>"><meta property="og:title" content="<?= e($title) ?>">
 <meta property="og:description" content="<?= e($description) ?>"><meta property="og:url" content="<?= e(current_url()) ?>">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="<?= e($title) ?>"><meta name="twitter:description" content="<?= e($description) ?>">
-<meta name="theme-color" content="#0b1020"><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/css/services.css"><noscript><link rel="stylesheet" href="/assets/css/no-js.css"></noscript>
+<meta name="theme-color" content="#0b1020"><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/css/services.css"><link rel="stylesheet" href="/assets/css/institutional.css"><noscript><link rel="stylesheet" href="/assets/css/no-js.css"></noscript>
 <script type="application/ld+json"><?= json_encode(['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => SITE_NAME, 'url' => site_url()], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
 <?php if ($schema): ?><script type="application/ld+json"><?= json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script><?php endif; ?>
 </head><body>
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 <header class="site-header"><a class="brand" href="/">Billy<span>Ajudas</span></a>
 <button class="menu-toggle" aria-expanded="false" aria-controls="main-menu">Menu</button>
-<nav id="main-menu" aria-label="Principal"><a href="/#servicos">Serviços</a><a href="/categorias/">Categorias</a><a href="/assinatura/">Assinatura</a><a href="/#como-funciona">Como funciona</a><a class="nav-whatsapp" href="<?= whatsapp_link('Olá! Quero conhecer os serviços.') ?>" target="_blank" rel="noopener">WhatsApp</a></nav></header>
+<nav id="main-menu" aria-label="Principal"><a href="/#servicos">Serviços</a><a href="/categorias/">Categorias</a><a href="/assinatura/">Assinatura</a><a href="/como-funciona/">Como funciona</a><a class="nav-whatsapp" href="<?= whatsapp_link('Olá! Quero conhecer os serviços.') ?>" target="_blank" rel="noopener">WhatsApp</a></nav></header>
 <?php }
 function page_footer(): void { ?>
-<footer class="site-footer"><a class="brand" href="/">Billy<span>Ajudas</span></a><p>Serviços digitais feitos sob medida para pequenos negócios e pessoas.</p><a href="/categorias/">Categorias</a> · <a href="/assinatura/">Planos mensais</a></footer><script src="/assets/js/site.js" defer></script></body></html>
+<footer class="site-footer"><div class="footer-grid"><div><a class="brand" href="/">Billy<span>Ajudas</span></a><p>Serviços digitais feitos sob medida para pequenos negócios e pessoas.</p></div><nav aria-label="Institucional"><strong>Institucional</strong><a href="/como-funciona/">Como funciona</a><a href="/contato/">Contato</a><a href="/privacidade/">Privacidade</a></nav><nav aria-label="Contratação"><strong>Contratação</strong><a href="/termos-de-servico/">Termos de serviço</a><a href="/cancelamento-e-reembolso/">Cancelamento e reembolso</a><a href="/categorias/">Catálogo</a></nav></div><p class="footer-note">© <?= date('Y') ?> Billy Ajudas. Atendimento e condições confirmados antes do início de cada serviço.</p></footer><script src="/assets/js/site.js" defer></script></body></html>
 <?php }
 function site_url(): string {
     $configured = rtrim((string) SITE_URL, '/');
