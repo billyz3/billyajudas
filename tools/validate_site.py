@@ -122,6 +122,7 @@ def main() -> int:
         "_includes/mercado-pago.php",
         "checkout/create.php",
         "api/mercado-pago/webhook.php",
+        "tools/test_mercado_pago.php",
         "_includes/payment-return.php",
         "pagamento/sucesso/index.php",
         "pagamento/pendente/index.php",

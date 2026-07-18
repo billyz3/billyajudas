@@ -217,3 +217,22 @@ function mp_normalize_status(string $status): string {
         default: return 'pending';
     }
 }
+
+function mp_status_rank(string $status): int {
+    $ranks = [
+        'created' => 0,
+        'pending' => 10,
+        'rejected' => 20,
+        'cancelled' => 20,
+        'approved' => 30,
+        'refunded' => 40,
+        'charged_back' => 50,
+        'review_required' => 100,
+    ];
+    return $ranks[$status] ?? 0;
+}
+
+function mp_should_advance_status(string $currentStatus, string $newStatus): bool {
+    if ($currentStatus === 'review_required') return $newStatus === 'review_required';
+    return mp_status_rank($newStatus) >= mp_status_rank($currentStatus);
+}
