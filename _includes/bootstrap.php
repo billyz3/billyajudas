@@ -63,18 +63,19 @@ function send_public_security_headers(): void {
     header('Cross-Origin-Resource-Policy: same-site');
 }
 
-function page_head(string $title, string $description, array $schema = []): void {
+function page_head(string $title, string $description, array $schema = [], ?string $canonicalPath = null): void {
 send_public_security_headers();
 $nonce = csp_nonce();
+$canonicalUrl = canonical_url($canonicalPath);
 ?>
 <!doctype html><html lang="pt-BR"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= e($title) ?></title><meta name="description" content="<?= e($description) ?>">
 <?php if (http_response_code() >= 400): ?><meta name="robots" content="noindex,follow"><?php endif; ?>
-<link rel="canonical" href="<?= e(current_url()) ?>">
+<link rel="canonical" href="<?= e($canonicalUrl) ?>">
 <meta property="og:type" content="website"><meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="<?= e(SITE_NAME) ?>"><meta property="og:title" content="<?= e($title) ?>">
-<meta property="og:description" content="<?= e($description) ?>"><meta property="og:url" content="<?= e(current_url()) ?>">
+<meta property="og:description" content="<?= e($description) ?>"><meta property="og:url" content="<?= e($canonicalUrl) ?>">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="<?= e($title) ?>"><meta name="twitter:description" content="<?= e($description) ?>">
 <meta name="theme-color" content="#0b1020"><link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/assets/css/services.css"><link rel="stylesheet" href="/assets/css/institutional.css"><noscript><link rel="stylesheet" href="/assets/css/no-js.css"></noscript>
 <script nonce="<?= e($nonce) ?>" type="application/ld+json"><?= json_encode(['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => SITE_NAME, 'url' => site_url()], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
@@ -98,12 +99,16 @@ function current_url(): string {
     $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
     return rtrim(site_url(), '/') . '/' . ltrim($path, '/');
 }
+function canonical_url(?string $path = null): string {
+    if ($path === null || $path === '') return current_url();
+    return rtrim(site_url(), '/') . '/' . ltrim($path, '/');
+}
 function whatsapp_link(string $text): string {
     $number = defined('WHATSAPP_NUMBER') ? preg_replace('/\D/', '', WHATSAPP_NUMBER) : '';
     return $number ? 'https://wa.me/' . $number . '?text=' . rawurlencode($text) : 'https://wa.me/?text=' . rawurlencode($text);
 }
 
-function service_schema(array $product): array {
+function service_schema(array $product, array $category): array {
     $offers = [];
     if (($product['preco_tipo'] ?? '') === 'fixo' && isset($product['preco_valor']) && is_numeric($product['preco_valor'])) {
         $offers = [
@@ -114,8 +119,7 @@ function service_schema(array $product): array {
             'availability' => 'https://schema.org/InStock',
         ];
     }
-    $schema = [
-        '@context' => 'https://schema.org',
+    $service = [
         '@type' => 'Service',
         'name' => (string) ($product['nome'] ?? ''),
         'description' => (string) ($product['descricao'] ?? ''),
@@ -123,6 +127,34 @@ function service_schema(array $product): array {
         'url' => rtrim(site_url(), '/') . ($product['rota'] ?? '/'),
         'areaServed' => 'BR',
     ];
-    if ($offers) $schema['offers'] = $offers;
-    return $schema;
+    if ($offers) $service['offers'] = $offers;
+
+    $breadcrumb = [
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'Início',
+                'item' => site_url(),
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => (string) ($category['nome'] ?? ''),
+                'item' => canonical_url((string) ($category['rota'] ?? '/categorias/')),
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 3,
+                'name' => (string) ($product['nome'] ?? ''),
+                'item' => canonical_url((string) ($product['rota'] ?? '/')),
+            ],
+        ],
+    ];
+
+    return [
+        '@context' => 'https://schema.org',
+        '@graph' => [$service, $breadcrumb],
+    ];
 }
