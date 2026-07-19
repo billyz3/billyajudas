@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 import urllib.error
 import urllib.request
@@ -38,6 +39,7 @@ def main() -> int:
     ]
     routes += [item["rota"] for item in categories]
     routes += [item["rota"] for item in products if item["rota"] != "/assinatura/"]
+    service_routes = {item["rota"] for item in products if item["rota"] != "/assinatura/"}
 
     for route in routes:
         status, headers, final_url, body = request(route)
@@ -53,6 +55,29 @@ def main() -> int:
             errors.append(f"{route}: CSP ausente")
         if "fatal error" in text.lower() or "warning:" in text.lower():
             errors.append(f"{route}: erro PHP visível")
+        canonical_match = re.search(r'<link rel="canonical" href="([^"]+)">', text)
+        if not canonical_match or canonical_match.group(1) != BASE + route:
+            errors.append(f"{route}: canonical ausente ou diferente da rota oficial")
+        if route in service_routes:
+            schema_blocks = re.findall(
+                r'<script[^>]+type="application/ld\+json"[^>]*>(.*?)</script>',
+                text,
+                re.DOTALL,
+            )
+            parsed_schema = []
+            for block in schema_blocks:
+                try:
+                    parsed_schema.append(json.loads(block))
+                except json.JSONDecodeError:
+                    errors.append(f"{route}: JSON-LD inválido")
+            graph_types = {
+                item.get("@type")
+                for schema in parsed_schema
+                for item in schema.get("@graph", [])
+                if isinstance(schema, dict) and isinstance(item, dict)
+            }
+            if not {"Service", "BreadcrumbList"}.issubset(graph_types):
+                errors.append(f"{route}: schema Service/BreadcrumbList ausente")
 
     for protected in ("/_includes/bootstrap.php", "/storage/data/products.json", "/tools/validate_site.py", "/config.local.php.example"):
         status, _, _, _ = request(protected)

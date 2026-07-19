@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 import urllib.error
 import urllib.request
@@ -14,6 +15,11 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = (sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:8765").rstrip("/")
 
 
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
 def request(path: str, method: str = "GET", body: bytes | None = None, headers: dict[str, str] | None = None):
     req = urllib.request.Request(BASE + path, data=body, method=method, headers=headers or {})
     try:
@@ -21,6 +27,16 @@ def request(path: str, method: str = "GET", body: bytes | None = None, headers: 
             return response.status, dict(response.headers), response.read().decode("utf-8", "replace")
     except urllib.error.HTTPError as error:
         return error.code, dict(error.headers), error.read().decode("utf-8", "replace")
+
+
+def request_without_redirect(path: str):
+    req = urllib.request.Request(BASE + path)
+    opener = urllib.request.build_opener(NoRedirect)
+    try:
+        with opener.open(req, timeout=8) as response:
+            return response.status, dict(response.headers)
+    except urllib.error.HTTPError as error:
+        return error.code, dict(error.headers)
 
 
 def main() -> int:
@@ -55,6 +71,28 @@ def main() -> int:
     status, _, text = request("/canva-social/cinco-artes-canva-personalizadas/")
     if status != 200 or "Comprar com Mercado Pago" in text:
         errors.append("checkout apareceu sem credencial privada configurada")
+    canonical_match = re.search(r'<link rel="canonical" href="([^"]+)">', text)
+    expected_canonical = "https://billyajudas.is-local.org/canva-social/cinco-artes-canva-personalizadas/"
+    if not canonical_match or canonical_match.group(1) != expected_canonical:
+        errors.append("serviço: canonical não corresponde à rota oficial com barra final")
+    schema_blocks = re.findall(r'<script[^>]+type="application/ld\+json"[^>]*>(.*?)</script>', text, re.DOTALL)
+    parsed_schema = []
+    for block in schema_blocks:
+        try:
+            parsed_schema.append(json.loads(block))
+        except json.JSONDecodeError:
+            errors.append("serviço: JSON-LD inválido")
+    graph_types = {
+        item.get("@type")
+        for schema in parsed_schema
+        for item in schema.get("@graph", [])
+        if isinstance(schema, dict) and isinstance(item, dict)
+    }
+    if not {"Service", "BreadcrumbList"}.issubset(graph_types):
+        errors.append("serviço: schema Service/BreadcrumbList ausente")
+    status, headers = request_without_redirect("/canva-social/cinco-artes-canva-personalizadas")
+    if status != 301 or headers.get("Location") != "/canva-social/cinco-artes-canva-personalizadas/":
+        errors.append("serviço sem barra final: redirecionamento 301 canônico ausente")
 
     status, _, text = request("/visual/arte-para-instagram/")
     if status != 200 or "5 Artes Personalizadas no Canva" not in text:

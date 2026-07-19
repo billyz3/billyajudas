@@ -39,7 +39,7 @@ $related = array_values(array_filter(
     static fn(array $item): bool => ($item['slug'] ?? '') !== ($product['slug'] ?? '')
 ));
 
-page_head($title, $description, service_schema($product));
+page_head($title, $description, service_schema($product, $category), (string) $product['rota']);
 ?>
 <main id="conteudo">
     <nav class="breadcrumbs" aria-label="Navegação estrutural">
